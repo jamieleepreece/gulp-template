@@ -6,12 +6,13 @@ var gulp         = require('gulp'),
     concat       = require('gulp-concat'),
     uglify       = require('gulp-uglify'),
     sass         = require('gulp-sass'),
+    watch        = require('gulp-watch'),
     sourcemaps   = require('gulp-sourcemaps'),
     connect      = require('gulp-connect'),
     livereload   = require('gulp-livereload'),
     wait         = require('gulp-wait'),
     SFTPDelay    = null,
-    offlineDev   = false,
+    offlineDev   = true,
     reloadLive   = null,
 
     input  = {
@@ -60,7 +61,11 @@ gulp.task('build-js', function() {
 //SCSS Task
 // (compile scss files)
 gulp.task('build-css', function() {
-    gulp.src('source/scss/**/*.scss')
+
+
+    // Update 29th August, 2018 -
+    // [Sass Watch] Added. Compiles saved only stylesheet for faster reloading.
+    return watch('source/scss/**/*.scss', { ignoreInitial: false })
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
         .on('error', swallowError)
@@ -68,6 +73,20 @@ gulp.task('build-css', function() {
         .pipe(connect.reload())
         .pipe(wait(SFTPDelay))
         .pipe(livereload(reloadLive));
+
+
+    // Older compiling code - 
+    // Will want to set this up as an optional function to compile all stylesheets
+
+    // gulp.src('source/scss/**/*.scss')
+    //     .pipe(sourcemaps.init())
+    //     .pipe(sass({outputStyle: 'compressed'}))
+    //     .on('error', swallowError)
+    //     .pipe(gulp.dest(output.stylesheets))
+    //     .pipe(connect.reload())
+    //     .pipe(wait(SFTPDelay))
+    //     .pipe(livereload(reloadLive));
+
 });
 
 //HTML Task
