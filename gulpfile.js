@@ -37,6 +37,11 @@ else{
 // Initiate -------------------------------------
 
 /* Run live browser refresh */
+gulp.task('idle', function() {
+    console.log('OK');
+});
+
+/* Run live browser refresh */
 gulp.task('connect', function() {
     connect.server({
         // livereload: true
