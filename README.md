@@ -10,36 +10,52 @@ It is highly advised to use the node package installer NVM "Node Version Manager
 
 You will not have to use 'sudo' after installing this.
 
-## NVM Installation
+## Step 1 - (Optional) NVM Installation
 
 The following will install the NVM package to your machine. If it throws a permission error, you may have to use super user (sudo). If issues are unresolved, contact a supervisor.
 ````
 touch ~/.bash_profile
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
 ````
-
 Now check your version:
-
 ```
 nvm --version
 ```
-
-Now check available versoins of node:
-
+If NVM is successfully installed, run the following command to view the available node packages
+````
 nvm ls-remote
-
-Now install desired package:
-
+````
+Install install desired package:
+````
 nvm install 7.2.0
+````
+You can now check what versions were installed
+````
+node -v
+npm -v
+````
 
+## Step 2 - Gulp installation
 
+Install the gulp environment onto your machine:
+````
+npm install gulp@latest
+````
+Check what version was installed:
+````
+gulp -v
+````
+link gulp to be used as a global:
+````
+npm link gulp
+````
 
-* NPM 6.4.1 ( npm install npm@6.4.1 )
-* Gulp 6.4.1
+## Step 3 - Download Dependancies
 
+The following command will now pull node_modules into your project and install any additional dependancies
+````
+npm install
+````
 
-Installation: 
-
-Gulp
-* npm install --global gulp
-* npm link gulp
+TODO --
+Finish
