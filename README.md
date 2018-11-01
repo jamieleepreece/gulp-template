@@ -12,7 +12,7 @@ You will not have to use 'sudo' after installing this.
 
 ## Step 1 - (Optional) NVM Installation
 
-The following will install the NVM package to your machine. If it throws a permission error, you may have to use super user (sudo). If issues are unresolved, contact a supervisor.
+The following will install the NVM package to your machine. If it throws a permission error, you may have to use super user (sudo) for just this installation!. If issues are unresolved, contact a supervisor.
 ````
 touch ~/.bash_profile
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.1/install.sh | bash
@@ -57,5 +57,5 @@ The following command will now pull node_modules into your project and install a
 npm install
 ````
 
-TODO --
-Finish
+Before launching gulp, configure the gulpfile.js to match your needs. This may be setting development to local, or adjusting sftp delays. You can also adjust whether gulp compiles all stylesheets at once (useful for project installs), or for only the saved stylesheet etc... 
+This is just a starting template, so feel free to add in any additional packages and/or fork this branch.
