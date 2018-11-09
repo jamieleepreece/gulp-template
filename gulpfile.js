@@ -72,7 +72,7 @@ gulp.task('build-js', function() {
 |*/
 gulp.task('build-css-single', function() {
 
-    return watch('source/scss/**/*.scss', { ignoreInitial: false })
+    return watch(input['sass'], { ignoreInitial: false })
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
@@ -88,7 +88,7 @@ gulp.task('build-css-single', function() {
 |*/
 gulp.task('build-css-all', function() {
 
-    gulp.src('source/scss/**/*.scss')
+    gulp.src(input['sass'])
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
