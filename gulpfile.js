@@ -1,10 +1,25 @@
+
+/*|
+| | [Current NPM Dependancies]
+| |
+| | - 'gulp' (Runs Gulp)
+| | - 'gulp-concat' (Concatenate multiple files) - [npm install --save-dev gulp-concat]
+| | - 'gulp-uglify' (Minifies JavaScript) - [npm install --save-dev gulp-uglify]
+| | - 'gulp-sass' (Compiles SASS / SCSS etc) - [npm install node-sass gulp-sass --save-dev]
+| | - 'gulp-watch' (Watches files for changes) - [npm install --save-dev gulp-watch]
+| | - 'gulp-sourcemaps' (Inline source maps are embedded in the compiled file) - [npm install --save-dev gulp-sourcemaps]
+| | - 'gulp-connect' (Gulp plugin to run a webserver (with LiveReload)) - [npm install --save-dev gulp-connect]
+| | - 'gulp-livereload' (livereload chrome extension) - [npm install --save-dev gulp-livereload]
+| | - 'gulp-wait' (Delay before calling the next function in a chain) - [npm install --save-dev gulp-wait]
+| | - 'gulp-plumber' (Prevent pipe breaking caused by errors from gulp plugins) - [npm install --save-dev gulp-plumber]
+|*/ 
+
 /*|
 | | [Declarations]
-| | variables, includes and sources
+| | variables, modules, includes and sources
 |*/ 
 
 var gulp            = require('gulp'),
-    gutil           = require('gulp-util'),
     concat          = require('gulp-concat'),
     uglify          = require('gulp-uglify'),
     sass            = require('gulp-sass'),
@@ -14,6 +29,7 @@ var gulp            = require('gulp'),
     livereload      = require('gulp-livereload'),
     wait            = require('gulp-wait'),
     plumber         = require('gulp-plumber'),
+
     SFTPDelay       = null,
     offlineDev      = true,
     reloadLive      = null,
@@ -26,12 +42,13 @@ var gulp            = require('gulp'),
       'img': 'source/img/*',
       'sass': 'source/scss/**/*.scss',
       'javascript': 'source/javascript/**/*.js',
-      'html': 'html/**/*.html'
+      'html': 'source/html/**/*.html'
     },
     output = {
       'stylesheets': 'public/assets/stylesheets',
       'javascript': 'public/assets/javascript'
     };
+
 
 if (offlineDev == true){
   SFTPDelay = '0';
@@ -56,7 +73,8 @@ gulp.task('connect', function() {
 | | [Compile JS]
 | | concat javascript files, minify if --type production.
 |*/
-gulp.task('build-js', function() {
+gulp.task('build-js', function(done) {
+
     gulp.src(input.javascript)
         .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
@@ -64,15 +82,17 @@ gulp.task('build-js', function() {
         .pipe(gulp.dest(output.javascript))
         .pipe(wait(SFTPDelay))
         .pipe(livereload());
+
+    done();
 });
 
 /*|
 | | [Compile saved file]
 | | compiles only the file saved.
 |*/
-gulp.task('build-css-single', function() {
+gulp.task('build-css-single', function(done) {
 
-    return watch(input['sass'], { ignoreInitial: false })
+    return watch('source/scss/**/*.scss', { ignoreInitial: false })
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
@@ -80,15 +100,17 @@ gulp.task('build-css-single', function() {
         .pipe(connect.reload())
         .pipe(wait(SFTPDelay))
         .pipe(livereload(reloadLive));
+
+    done();
 });
 
 /*|
 | | [Compile all]
 | | compiles all scss files for project init.
 |*/
-gulp.task('build-css-all', function() {
+gulp.task('build-css-all', function(done) {
 
-    gulp.src(input['sass'])
+    gulp.src('source/scss/**/*.scss')
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
@@ -96,53 +118,70 @@ gulp.task('build-css-all', function() {
         .pipe(connect.reload())
         .pipe(wait(SFTPDelay))
         .pipe(livereload(reloadLive));
+
+    done();
 });
 
 /*|
 | | [HTML Task]
 | | reload on saving html file
 |*/
-gulp.task('watch-html', function() {
+gulp.task('refresh-html-chop', function(done) {
+
     gulp.src(input.html)
         .pipe(wait(SFTPDelay))
         .pipe(livereload());
+
+    done();
 });
 
 /*|
-| | [Custom function]
+| | [Debug function]
 | | test js in terminal and such.
 |*/
-gulp.task('idle', function() {
+gulp.task('idle', function(done) {
+
     console.log('OK');
+
+    done();
 });
 
-// ERROR Debug [Deprecated]
-// Console logs errors to terminal instead of crashing gulp
-function swallowError (error) {
-  // If you want details of the error in the console
-  console.log(error.toString())
-  this.emit('end')
-}
+/*|
+| | [Messages]
+| | test js in terminal and such.
+|*/
+gulp.task('message', function() { 
+
+  return new Promise(function(resolve, reject) {
+    console.log("HTTP Server Started");
+    resolve();
+  });
+
+});
 
 
-// Execute ------------------------------
-
-// Watch declared files for changes and run custom function
-gulp.task('watch', function() {
+/*|
+| | [Watch]
+| | Enable automatic compiling on save
+|*/
+gulp.task('watch', function(done) {
 
     livereload.listen();
-    gulp.watch(input.javascript, ['build-js']);
+
+    gulp.watch(input.javascript, gulp.series('build-js'));
 
     if (compileSingle === true) {
-        gulp.watch(input.sass, ['build-css-single']);
+        gulp.watch(input.sass, gulp.series('build-css-single'));
     }
     else{
-        gulp.watch(input.sass, ['build-css-all']);
+        gulp.watch(input.sass, gulp.series('build-css-all'));
     }
 
-    gulp.watch(input.html, ['watch-html']);
+    gulp.watch(input.html, gulp.series('refresh-html-chop'));
 
+    done();
 });
 
+
 /* run the watch task when gulp is called without arguments */
-gulp.task('default', ['build-js', 'build-css-all', 'watch', 'connect']);
+gulp.task('default', gulp.parallel('build-js', 'build-css-all', 'watch', 'connect'));

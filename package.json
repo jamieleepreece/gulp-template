@@ -1,25 +1,24 @@
 {
-  "name": "development_environment",
+  "name": "scss-skeleton",
   "version": "1.0.0",
-  "description": "Gulp setup for Mojave",
+  "description": "Pure SCSS compiler",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "watch"
   },
-  "author": "Jamie Preece",
+  "author": "",
   "license": "ISC",
-  "dependencies": {
-    "gulp": "^3.9.1"
-  },
   "devDependencies": {
+    "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
-    "gulp-connect": "^5.6.1",
-    "gulp-livereload": "^4.0.0",
-    "gulp-plumber": "^1.2.0",
+    "gulp-connect": "^5.7.0",
+    "gulp-livereload": "^4.0.1",
+    "gulp-plumber": "^1.2.1",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
     "gulp-wait": "0.0.2",
-    "gulp-watch": "^5.0.1"
+    "gulp-watch": "^5.0.1",
+    "node-sass": "^4.11.0"
   }
 }

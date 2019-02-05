@@ -1,0 +1,15 @@
+nav.changeme{
+    h2{
+        font-size: 22px;
+        color: red;
+        opacity: 0.8;
+
+        &.compiled{
+            &:after{
+                left: 25px;
+                content: 'Styles compiled';
+                position: absolute;
+            }
+        }
+    }
+}
