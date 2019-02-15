@@ -15,6 +15,14 @@
 |*/ 
 
 /*|
+| | [Usage]
+| | To only compile stylesheets use `gulp styles` terminal command
+| |
+| | {compileSingle = true} will compile the current saved scss file, while {compileSingle = false} compiles all on save.
+| | {offlineDev} enables a delay for LiveReload, so your text editor has time to upload the files to the server. Useful mostly for live development.
+|*/ 
+
+/*|
 | | [Declarations]
 | | variables, modules, includes and sources
 |*/ 
@@ -40,7 +48,7 @@ var gulp            = require('gulp'),
 
     input  = {
       'img': 'source/img/*',
-      'sass': 'source/scss/**/*.scss',
+      'scss': 'source/scss/**/*.scss',
       'javascript': 'source/javascript/**/*.js',
       'html': 'source/html/**/*.html'
     },
@@ -92,7 +100,7 @@ gulp.task('build-js', function(done) {
 |*/
 gulp.task('build-css-single', function(done) {
 
-    return watch('source/scss/**/*.scss', { ignoreInitial: false })
+    return watch(input.scss, { ignoreInitial: false })
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
@@ -110,7 +118,7 @@ gulp.task('build-css-single', function(done) {
 |*/
 gulp.task('build-css-all', function(done) {
 
-    gulp.src('source/scss/**/*.scss')
+    gulp.src(input.scss)
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({outputStyle: 'compressed'}))
@@ -178,6 +186,25 @@ gulp.task('watch', function(done) {
     }
 
     gulp.watch(input.html, gulp.series('refresh-html-chop'));
+
+    done();
+});
+
+
+/*|
+| | [Watch]
+| | Enable automatic compiling on save
+|*/
+gulp.task('styles', function(done) {
+
+    livereload.listen();
+
+    if (compileSingle === true) {
+        gulp.watch(input.sass, gulp.series('build-css-single'));
+    }
+    else{
+        gulp.watch(input.sass, gulp.series('build-css-all'));
+    }
 
     done();
 });
