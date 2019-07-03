@@ -72,9 +72,10 @@ else{
 
 /* Run live browser refresh */
 gulp.task('connect', function() {
-    connect.server({
-        // livereload: true
-    });
+    // connect.server({
+    //     // livereload: true
+    // });
+    connect.server();
 });
 
 /*|
@@ -148,9 +149,7 @@ gulp.task('refresh-html-chop', function(done) {
 | | test js in terminal and such.
 |*/
 gulp.task('idle', function(done) {
-
     console.log('OK');
-
     done();
 });
 
@@ -160,13 +159,12 @@ gulp.task('idle', function(done) {
 |*/
 gulp.task('message', function() { 
 
-  return new Promise(function(resolve, reject) {
-    console.log("HTTP Server Started");
-    resolve();
-  });
+    return new Promise(function(resolve, reject) {
+        console.log("HTTP Server Started");
+        resolve();
+    });
 
 });
-
 
 /*|
 | | [Watch]
@@ -179,17 +177,16 @@ gulp.task('watch', function(done) {
     gulp.watch(input.javascript, gulp.series('build-js'));
 
     if (compileSingle === true) {
-        gulp.watch(input.sass, gulp.series('build-css-single'));
+        gulp.series('build-css-single');
     }
     else{
-        gulp.watch(input.sass, gulp.series('build-css-all'));
+        gulp.watch(input.scss, gulp.series('build-css-all'));
     }
 
     gulp.watch(input.html, gulp.series('refresh-html-chop'));
 
     done();
 });
-
 
 /*|
 | | [Watch]
@@ -208,7 +205,6 @@ gulp.task('styles', function(done) {
 
     done();
 });
-
 
 /* run the watch task when gulp is called without arguments */
 gulp.task('default', gulp.parallel('build-js', 'build-css-all', 'watch', 'connect'));

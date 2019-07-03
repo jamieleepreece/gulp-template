@@ -2,7 +2,7 @@
 
 Working template for Gulp.js. Optimised for both chops and remote work
 
-[31/10/18] - Updated dependancies for OSX Mojave. Cleaned out some deprecated packages.
+[31/10/18] - Updated dependencies for OSX Mojave. Cleaned out some deprecated packages.
 
 Installation:
 
@@ -50,12 +50,17 @@ link gulp to be used as a global:
 npm link gulp
 ````
 
-## Step 3 - Download Dependancies
+## Step 3 - Download Dependencies
 
 The following command will now pull node_modules into your project and install any additional dependancies
 ````
 npm install
 ````
+
+## Step 3 - Test Dependencies
+
+Open http://localhost:8080 in your browser and navigate to source/html/chop-index.html
+Update the html, css and js and save (ctrl+s) for gulp compile your code.
 
 Before launching gulp, configure the gulpfile.js to match your needs. This may be setting development to local, or adjusting sftp delays. You can also adjust whether gulp compiles all stylesheets at once (useful for project installs), or for only the saved stylesheet etc... 
 This is just a starting template, so feel free to add in any additional packages and/or fork this branch.
