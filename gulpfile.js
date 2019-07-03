@@ -12,6 +12,7 @@
 | | - 'gulp-livereload' (livereload chrome extension) - [npm install --save-dev gulp-livereload]
 | | - 'gulp-wait' (Delay before calling the next function in a chain) - [npm install --save-dev gulp-wait]
 | | - 'gulp-plumber' (Prevent pipe breaking caused by errors from gulp plugins) - [npm install --save-dev gulp-plumber]
+| | - 'yargs' (Adds command line support for function arguments) - [npm install --save-dev yargs]
 |*/ 
 
 /*|
@@ -37,6 +38,8 @@ var gulp            = require('gulp'),
     livereload      = require('gulp-livereload'),
     wait            = require('gulp-wait'),
     plumber         = require('gulp-plumber'),
+    argv            = require('yargs').argv,
+    fs              = require('fs'),
 
     SFTPDelay       = null,
     offlineDev      = true,
@@ -69,6 +72,58 @@ else{
 /*|
 | | [Functions / Tasks]
 |*/
+
+/*|
+| | [Typescript support [.ts]]
+| | Create a production .min file of the resulting .js file
+| | Call using Yargs: e.g. `$ gulp ts-single --file=myjsfile.js`
+| | For now, the input folder is the output.
+|*/
+gulp.task('ts-single', function(done) {
+
+    if (typeof argv.file !== 'undefined') {
+
+        var input_output = 'js';
+        var targetFile = input_output + '/' + argv.file;
+
+        fs.access(targetFile, (err) => {
+            //Check file exists
+            if (err) {
+                console.error(err.message);
+                console.error(err.code);
+            }
+            else{
+                // Check file type
+                let fileType = targetFile.split('.').pop();
+
+                let fileName = targetFile.split('.').shift();
+
+                fileName = fileName.split('/').pop();
+
+                if (fileType === 'js') {
+                   
+                   gulp.src(targetFile)
+                       .pipe(sourcemaps.init())
+                       .pipe(concat(fileName + '.min.js'))
+                       .pipe(uglify())
+                       .pipe(gulp.dest(input_output));
+
+                }
+                else if (fileType === 'ts') {
+                    console.error('Wrong filetype. This is designed to compile typescript .js files.');
+                }
+                else{
+                    console.error('File must be a .js file');
+                }
+            }
+        });
+    }
+    else{
+        console.error('Invalid input, matey');
+    }
+
+    done();
+});
 
 /* Run live browser refresh */
 gulp.task('connect', function() {
